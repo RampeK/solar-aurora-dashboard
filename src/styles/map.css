@@ -1,0 +1,33 @@
+.satellite-control {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.satellite-item {
+  margin: 5px 0;
+}
+
+.satellite-marker {
+  font-size: 20px;
+  filter: drop-shadow(0 0 5px #00ff00);
+}
+
+.aurora-popup {
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 8px;
+}
+
+.probability-bar, .intensity-bar {
+  height: 20px;
+  background: #333;
+  margin: 5px 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.popup-content {
+  padding: 10px;
+} 
