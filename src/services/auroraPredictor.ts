@@ -3,7 +3,7 @@ import { SolarActivity, CMEEvent, AuroraForecast } from '../types/spaceWeather';
 export class AuroraPredictor {
   private readonly KP_INDEX_THRESHOLD = 5;
   private readonly SPEED_IMPACT_FACTOR = 0.001;
-  private readonly LOCATION_IMPACT_RANGE = 45; // astetta
+  private readonly LOCATION_IMPACT_RANGE = 45; 
 
   calculateAuroraProbability(
     solarActivity: SolarActivity,
@@ -22,7 +22,7 @@ export class AuroraPredictor {
   private getMostSignificantEvents(events: CMEEvent[]): CMEEvent[] {
     return events
       .sort((a, b) => b.speed - a.speed)
-      .slice(0, 3); // Huomioi 3 voimakkainta tapahtumaa
+      .slice(0, 3); 
   }
 
   private estimateKpIndex(events: CMEEvent[]): number {
@@ -44,8 +44,8 @@ export class AuroraPredictor {
     const absLat = Math.abs(latitude);
     if (absLat < 55) return 0;
     
-    const latitudeFactor = (absLat - 55) / 35; // 55-90 asteen välillä
-    const kpFactor = kpIndex / 9; // Kp asteikko on 0-9
+    const latitudeFactor = (absLat - 55) / 35; 
+    const kpFactor = kpIndex / 9; 
     
     return Math.min(latitudeFactor * kpFactor * 100, 100) / 100;
   }

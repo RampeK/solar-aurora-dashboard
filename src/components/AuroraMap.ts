@@ -11,7 +11,7 @@ export class AuroraMap {
   constructor(containerId: string) {
     this.map = L.map(containerId).setView([65, 26], 5);
     
-    // Tumma karttateema
+    
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '© OpenStreetMap contributors, © CARTO'
     }).addTo(this.map);
@@ -19,14 +19,14 @@ export class AuroraMap {
     this.probabilityLayer = L.layerGroup().addTo(this.map);
     this.auroraOverlay = L.layerGroup().addTo(this.map);
 
-    // Lisää kontrollit kerroksille
+    
     const overlays = {
       "Probability": this.probabilityLayer,
       "Aurora Band": this.auroraOverlay
     };
     L.control.layers({}, overlays).addTo(this.map);
 
-    // Piirrä revontulien todennäköisyysvyöhykkeet
+    
     this.drawAuroraZones();
   }
 
@@ -123,7 +123,7 @@ export class AuroraMap {
       this.auroraOverlay.clearLayers();
       const avgLat = this.calculateAuroraBandLatitude(forecasts);
       
-      // Luo aaltoileva revontulivyöhyke
+      
       for (let lon = -180; lon <= 180; lon += 2) {
         const waveLat = avgLat + Math.sin(lon / 30 + phase) * 2;
         const point = L.circle([waveLat, lon], {
@@ -189,7 +189,6 @@ export class AuroraMap {
   }
 
   private drawAuroraZones() {
-    // Revontulien todennäköisyysvyöhykkeet
     const zones = [
       { lat: 67, probability: 0.8, color: '#00ff00' },
       { lat: 65, probability: 0.6, color: '#40ff00' },
