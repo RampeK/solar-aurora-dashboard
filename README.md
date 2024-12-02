@@ -34,13 +34,6 @@ NASA_API_KEY=your_api_key_here
 - Real-time data updates
 - Geolocation-based predictions
 
-## Development
-- Clone the repository
-- Install dependencies: `npm install`
-- Start in development mode: `npm run dev`
-- Build the app: `npm run build`
-- Create distribution: `npm run dist`
-
 ## Map Features
 - Dynamic aurora probability zones
 - City-specific forecasts
