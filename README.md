@@ -24,7 +24,7 @@ NASA_API_KEY=your_api_key_here
 - Solar event tracking (CMEs, Solar Flares, High-Speed Streams)
 - Aurora visibility zones
 - Best viewing time calculations
-#TODO - Add weather forecasting with interactive visusalization
+- #TODO - Add weather forecasting with interactive visusalization
 
 ## Technologies
 - TypeScript
