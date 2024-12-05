@@ -38,9 +38,9 @@ NASA_API_KEY=your_api_key_here
 ## Map Features
 - Dynamic aurora probability zones
 - City-specific forecasts
-- Interactive markers with detailed information
+- TODO Interactive markers with detailed information
 - Dark theme optimized for aurora viewing
-- Animated aurora band visualization
+- TODO Animated aurora band visualization
 
 ## Forecast Algorithm
 The app calculates aurora visibility probabilities based on:
