@@ -7,13 +7,9 @@ Real-time aurora borealis (Northern Lights) forecasting application for Finland.
 ## Quick Start
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Run the app: `npm start`
-
-The app uses NASA's demo API key by default (limited to 30 requests per hour). 
-For higher rate limits, get your own API key from https://api.nasa.gov/ 
-and add it to a `.env` file:
-env
-NASA_API_KEY=your_api_key_here
+3. Get your NASA API key from [api.nasa.gov](https://api.nasa.gov/)
+4. Copy `.env.example` to `.env` and add your API key
+5. Run the app: `npm start`
 
 ## Features
 - Aurora probability forecasts for Finnish cities
