@@ -3,37 +3,42 @@ import { AuroraForecast } from '../types/spaceWeather';
 import { finnishCities } from '../config/cities';
 
 export class AuroraMap {
+  // Main map components
   private map: L.Map;
   private probabilityLayer: L.LayerGroup;
   private auroraOverlay: L.LayerGroup;
   private animationFrame: number | null = null;
 
   constructor(containerId: string) {
+    // Initialize map centered on Finland
     this.map = L.map(containerId).setView([65, 26], 5);
     
-    
+    // Add dark theme map layer
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '© OpenStreetMap contributors, © CARTO'
     }).addTo(this.map);
 
+    // Create layers for aurora probability and aurora band
     this.probabilityLayer = L.layerGroup().addTo(this.map);
     this.auroraOverlay = L.layerGroup().addTo(this.map);
 
-    
+    // Add layer controls to toggle visibility
     const overlays = {
       "Probability": this.probabilityLayer,
       "Aurora Band": this.auroraOverlay
     };
     L.control.layers({}, overlays).addTo(this.map);
 
-    
+    // Draw static aurora probability zones
     this.drawAuroraZones();
   }
 
+  // Update map with new forecast data
   updateProbabilities(forecasts: { location: { lat: number; lon: number; city: string }, forecast: AuroraForecast }[]) {
     this.probabilityLayer.clearLayers();
     this.animateAuroraBand(forecasts);
 
+    // Create markers for each forecast location
     forecasts.forEach(({ location, forecast }) => {
       const color = this.getProbabilityColor(forecast.probability);
       const radius = 30000 * forecast.probability;
@@ -92,6 +97,7 @@ export class AuroraMap {
     });
   }
 
+  // Create pulsing effect for high probability markers
   private pulseMarker(circle: L.Circle, probability: number) {
     let size = 1;
     let growing = true;
@@ -115,6 +121,7 @@ export class AuroraMap {
     animate();
   }
 
+  // Animate the aurora band based on forecast data
   private animateAuroraBand(forecasts: any[]) {
     this.auroraOverlay.clearLayers();
     let phase = 0;
@@ -142,6 +149,7 @@ export class AuroraMap {
     animate();
   }
 
+  // Calculate average latitude for aurora band
   private calculateAuroraBandLatitude(forecasts: any[]): number {
     const highProbForecasts = forecasts.filter(f => f.forecast.probability > 0.5);
     if (highProbForecasts.length === 0) return 65;
@@ -149,6 +157,7 @@ export class AuroraMap {
     return highProbForecasts.reduce((sum, f) => sum + f.location.lat, 0) / highProbForecasts.length;
   }
 
+  // Determine best viewing time based on probability
   private calculateBestViewingTime(forecast: AuroraForecast): string {
     const now = new Date();
     const sunset = this.calculateSunset(now);
@@ -164,6 +173,7 @@ export class AuroraMap {
     }
   }
 
+  // Helper functions for sunset/sunrise times
   private calculateSunset(date: Date): Date {
     const sunset = new Date(date);
     sunset.setHours(21, 0, 0);
@@ -176,18 +186,21 @@ export class AuroraMap {
     return sunrise;
   }
 
+  // Get color based on probability percentage
   private getProbabilityColor(probability: number): string {
     if (probability > 0.7) return '#00ff00';
     if (probability > 0.4) return '#ffff00';
     return '#ff0000';
   }
 
+  // Clean up animations when component is destroyed
   cleanup() {
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
     }
   }
 
+  // Draw static probability zones on the map
   private drawAuroraZones() {
     const zones = [
       { lat: 67, probability: 0.8, color: '#00ff00' },

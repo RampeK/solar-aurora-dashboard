@@ -9,7 +9,9 @@ import { BubbleDataPoint } from 'chart.js';
 
 Chart.register(...registerables, ChartDataLabels);
 
+// Service for creating data visualizations using Chart.js
 export class VisualizationService {
+  // Create main solar activity visualization
   createVisualization(solarData: SolarActivity, forecast: AuroraForecast): ChartConfiguration {
     const events = solarData.cmeEvents
       .filter(event => event.speed > 0)
@@ -102,6 +104,7 @@ export class VisualizationService {
     };
   }
 
+  // Create Kp index timeline visualization
   createKpIndexVisualization(kpData: number[]): ChartConfiguration {
     return {
       type: 'line',
@@ -137,6 +140,7 @@ export class VisualizationService {
     };
   }
 
+  // Generate color gradient based on event speed
   private getGradientColor(speed: number): string {
     const intensity = Math.min(speed / 2000, 1);
     const r = Math.round(255);

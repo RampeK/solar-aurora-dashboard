@@ -9,9 +9,11 @@ export interface WeatherData {
   visibility: number;
 }
 
+// Service for fetching and processing weather conditions
 export class WeatherService {
   private readonly API_KEY = process.env.WEATHER_API_KEY;
 
+  // Get current viewing conditions for a location
   async getViewingConditions(lat: number, lon: number): Promise<WeatherData> {
     try {
       const response = await fetch(
@@ -31,6 +33,7 @@ export class WeatherService {
     }
   }
 
+  // Calculate current moon phase (0-1, where 0=new moon, 0.5=full moon)
   private calculateMoonPhase(date: Date): number {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;

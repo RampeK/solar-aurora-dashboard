@@ -29,6 +29,6 @@
     "electron": "^28.1.0",
     "electron-builder": "^24.9.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.7.3"
   }
 }

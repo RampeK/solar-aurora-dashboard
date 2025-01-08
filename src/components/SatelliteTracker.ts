@@ -1,8 +1,9 @@
 import L from 'leaflet';
 import { NasaApiService } from '../services/nasaApiService';
 
-const G_CONSTANT = 6.67430e-11; // Gravitaatiovakio
-const EARTH_MASS = 5.972e24;    // Maan massa
+// Physical constants for orbital calculations
+const G_CONSTANT = 6.67430e-11; // Gravitational constant
+const EARTH_MASS = 5.972e24;    // Mass of Earth
 
 interface Satellite {
   id: string;
@@ -12,11 +13,13 @@ interface Satellite {
 }
 
 export class SatelliteTracker {
+  // Class properties for map elements and tracking
   private map: L.Map;
   private satellites: L.Marker[] = [];
   private nasaApi: NasaApiService;
   private trajectoryLayers: L.Polyline[] = [];
 
+  // List of tracked satellites with their properties
   private readonly SATELLITES: Satellite[] = [
     { id: '25544', name: 'ISS', type: 'Space Station', altitude: 408 },
     { id: '27424', name: 'NOAA 18', type: 'Weather Satellite', altitude: 854 },
@@ -30,6 +33,7 @@ export class SatelliteTracker {
     this.addSatelliteControl();
   }
 
+  // Creates control panel for toggling satellite visibility
   private addSatelliteControl() {
     const control = new L.Control({ position: 'topright' });
     control.onAdd = () => {
@@ -55,6 +59,7 @@ export class SatelliteTracker {
     control.addTo(this.map);
   }
 
+  // Updates all satellite positions and trajectories
   async updatePositions() {
     this.clearTrajectories();
     this.satellites.forEach(marker => marker.remove());
@@ -65,12 +70,13 @@ export class SatelliteTracker {
       const marker = this.createSatelliteMarker(satellite, position);
       this.satellites.push(marker);
 
-      // Piirrä satelliitin rata
+      
       const trajectory = await this.calculateTrajectory(satellite);
       this.drawTrajectory(trajectory);
     }
   }
 
+  // Creates a marker for a satellite with popup information
   private createSatelliteMarker(satellite: Satellite, position: any): L.Marker {
     const icon = L.divIcon({
       className: 'satellite-icon',
@@ -91,17 +97,20 @@ export class SatelliteTracker {
       .addTo(this.map);
   }
 
+  // Calculate orbital speed using basic orbital mechanics
   private calculateOrbitalSpeed(altitude: number): number {
-    // Yksinkertaistettu laskenta
-    const R = 6371000 + altitude * 1000; // Etäisyys maan keskipisteestä (m)
-    return Math.sqrt(G_CONSTANT * EARTH_MASS / R) / 1000; // Muunna km/s
+    // Simplified calculation using circular orbit
+    const R = 6371000 + altitude * 1000; // Distance from Earth's center (m)
+    return Math.sqrt(G_CONSTANT * EARTH_MASS / R) / 1000; // Convert to km/s
   }
 
+  // Calculate orbital period using Kepler's laws
   private calculateOrbitalPeriod(altitude: number): number {
     const R = 6371 + altitude; // km
-    return Math.sqrt(4 * Math.PI * Math.PI * R * R * R / (G_CONSTANT * EARTH_MASS)) / 60; // Minuutteina
+    return Math.sqrt(4 * Math.PI * Math.PI * R * R * R / (G_CONSTANT * EARTH_MASS)) / 60; // In minutes
   }
 
+  // Calculate predicted trajectory points for satellite orbit
   private async calculateTrajectory(satellite: Satellite): Promise<[number, number][]> {
     const points: [number, number][] = [];
     const center = await this.nasaApi.getSatellitePosition(satellite.id);
@@ -116,6 +125,7 @@ export class SatelliteTracker {
     return points;
   }
 
+  // Draw trajectory line on the map
   private drawTrajectory(points: [number, number][]) {
     const line = L.polyline(points, {
       color: '#00ff00',
@@ -127,11 +137,13 @@ export class SatelliteTracker {
     this.trajectoryLayers.push(line);
   }
 
+  // Remove all trajectory lines from map
   private clearTrajectories() {
     this.trajectoryLayers.forEach(layer => layer.remove());
     this.trajectoryLayers = [];
   }
 
+  // Toggle satellite visibility on map
   private toggleSatellite(id: string, visible: boolean) {
     const satellite = this.satellites.find(s => s.getElement()?.querySelector(`[data-id="${id}"]`));
     if (satellite) {

@@ -17,16 +17,19 @@ interface SpaceWeatherData {
   auroraVisibility: AuroraForecast;
 }
 
+// Main service for handling space weather data and predictions
 class SpaceWeatherService {
   private readonly NASA_API_KEY = process.env.NASA_API_KEY;
   private readonly WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 
+  // Get date for historical data query (last 30 days)
   private getLastWeek(): string {
     const date = new Date();
     date.setDate(date.getDate() - 30);
     return date.toISOString().split('T')[0];
   }
 
+  // Fetch and combine all solar activity data from NASA DONKI API
   async getSolarActivityData(): Promise<SolarActivity> {
     try {
       const [cmeResponse, flareResponse, hssResponse] = await Promise.all([
@@ -68,12 +71,14 @@ class SpaceWeatherService {
     }
   }
 
+  // Calculate magnetic field strength for a given location
   async getMagneticFieldStrength(latitude: number, longitude: number): Promise<number> {
     const baseStrength = 50000;
     const latitudeEffect = Math.abs(latitude) / 90 * 10000;
     return baseStrength + latitudeEffect;
   }
 
+  // Calculate aurora probability based on solar activity and magnetic field
   private calculateProbability(solarData: SolarActivity, magneticStrength: number): number {
     const cmeIntensity = this.calculateCMEIntensity(solarData.cmeEvents);
     const magneticFactor = magneticStrength / 50000;
@@ -81,12 +86,14 @@ class SpaceWeatherService {
     return Math.min(cmeIntensity * magneticFactor, 1);
   }
 
+  // Calculate average CME intensity from events
   private calculateCMEIntensity(events: CMEEvent[]): number {
     if (events.length === 0) return 0;
     
     return events.reduce((sum, event) => sum + (event.speed / 1000), 0) / events.length;
   }
 
+  // Transform raw NASA API data into standardized CME event format
   private transformCMEData(rawEvent: any): CMEEvent {
     if (rawEvent.flrID) {
       return {
@@ -118,6 +125,7 @@ class SpaceWeatherService {
     }
   }
 
+  // Calculate solar flare speed based on classification
   private calculateFlareSpeed(classType: string): number {
     if (!classType) return 0;
     
@@ -136,6 +144,7 @@ class SpaceWeatherService {
     }
   }
 
+  // Extract and process impact time estimates from events
   private calculateImpactTimes(data: any[]): ImpactTimeEstimate[] {
     return data
       .filter(event => event.expectedTimeOfArrival)
@@ -145,6 +154,7 @@ class SpaceWeatherService {
       }));
   }
 
+  // Process raw solar data into structured format
   private processSolarData(data: any): SolarActivity {
     if (!Array.isArray(data)) {
       return {

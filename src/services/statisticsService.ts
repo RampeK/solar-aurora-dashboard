@@ -7,7 +7,9 @@ interface ActivityStats {
   seasonalPatterns: { [season: string]: number };
 }
 
+// Service for analyzing historical aurora activity data
 export class StatisticsService {
+  // Generate comprehensive activity statistics
   analyzeAuroraActivity(historicalData: SolarActivity[]): ActivityStats {
     return {
       monthlyActivity: this.calculateMonthlyActivity(historicalData),
@@ -17,6 +19,7 @@ export class StatisticsService {
     };
   }
 
+  // Calculate activity levels by month
   private calculateMonthlyActivity(data: SolarActivity[]): { [key: string]: number } {
     const monthly: { [key: string]: number } = {};
     
@@ -31,11 +34,13 @@ export class StatisticsService {
     return monthly;
   }
 
+  // Determine best viewing locations based on historical data
   private findBestLocations(data: SolarActivity[]): Array<{ location: string; probability: number }> {
     // Implement location analysis based on historical data
     return [];
   }
 
+  // Find peak activity times from historical data
   private findPeakTimes(data: SolarActivity[]): Array<{ time: Date; intensity: number }> {
     const peaks = data.flatMap(activity =>
       activity.cmeEvents
@@ -49,6 +54,7 @@ export class StatisticsService {
     return peaks.sort((a, b) => b.intensity - a.intensity);
   }
 
+  // Analyze seasonal patterns in aurora activity
   private analyzeSeasonalPatterns(data: SolarActivity[]): { [season: string]: number } {
     const seasons: { [key: string]: number } = {
       winter: 0,

@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Interface for NASA's Astronomy Picture of the Day API response
 interface APODResponse {
   title: string;
   explanation: string;
@@ -12,8 +13,10 @@ interface APODResponse {
 }
 
 export class NasaImageService {
+  // Use provided API key or fallback to demo key
   private readonly NASA_API_KEY = process.env.NASA_API_KEY || 'DEMO_KEY';
 
+  // Fetch NASA's Astronomy Picture of the Day
   async getAstronomyPictureOfTheDay(): Promise<APODResponse> {
     try {
       const response = await fetch(
@@ -21,6 +24,7 @@ export class NasaImageService {
       );
       const data = await response.json();
       
+      // Warn if using demo key and hitting rate limits
       if (response.status === 429) {
         console.warn(
           'Demo API key rate limit exceeded. Get your own API key from https://api.nasa.gov/ ' +
